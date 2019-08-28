@@ -1,0 +1,55 @@
+media rest api
+
+-> database schema
+
+    artist 1-n medium 1-1 medium_location n-1 location
+
+    artist
+        id (int)
+        name (str)
+
+    medium
+        id (int)
+        title (str)
+        description (str)
+
+    medium_location
+        id (int)
+        medium_id (int)
+        location_id (int)
+        index (int)
+
+    location
+        id (int)
+        name (str)
+
+-> resources
+
+    /api/artists : GET, POST
+    /api/artists/{id} : GET
+    /api/artists/{id}/media : GET
+
+    /api/media : GET, (POST)
+    /api/media/{id} : GET
+
+    /api/locations : GET, POST
+    /api/locations/{name} : GET
+    /api/locations/{name}/media : GET
+
+    /api/locations/{name}/artists/{id}/media : GET, POST
+
+    -------------------------------------------------------------
+
+    /api
+
+    /api/users POST, GET
+    /api/users/{name} GET
+    /api/users/{name}/tasks POST, GET
+    /api/users/{name}/comments GET
+
+    /api/tasks GET
+    /api/tasks/{id} GET
+    /api/tasks/{id}/comments POST, GET
+
+    /api/comments GET
+    /api/comments/{id} GET
