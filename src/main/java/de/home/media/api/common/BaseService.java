@@ -25,6 +25,14 @@ public class BaseService<E extends BaseEntity> {
         return Optional.ofNullable(this.entityManager.find(this.entityClass, id));
     }
 
+    public List<E> find() {
+        CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<E> cq = cb.createQuery(this.entityClass);
+        Root<E> qr = cq.from(this.entityClass);
+        return this.entityManager.createQuery(cq)
+                .getResultList();
+    }
+
     public List<E> find(Parameter param) {
         CriteriaBuilder cb = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<E> cq = cb.createQuery(this.entityClass);

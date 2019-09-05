@@ -6,25 +6,31 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
+import java.util.Base64;
 import java.util.Objects;
 
-public final class PasswordInfo {
+public final class PasswordHash {
 
     private byte[] password;
     private byte[] salt;
     private Integer iterations;
     private Integer length;
 
-    public PasswordInfo(String password) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        this(password, 1000, 128);
+    public PasswordHash(String hashed) throws NullPointerException, IllegalArgumentException {
+        String[] parts = Objects.requireNonNull(hashed, "hash must not be null").split(":");
+        if (parts.length != 4) throw new IllegalArgumentException("hash has wrong format: part number");
+
+        this.salt = Base64.getDecoder().decode(parts[0]);
+        this.password = Base64.getDecoder().decode(parts[1]);
+        this.iterations = Integer.valueOf(parts[2]);
+        this.length = Integer.valueOf(parts[3]);
     }
 
-    public PasswordInfo(String password, Integer iterations, Integer length)
+    public PasswordHash(String password, Integer iterations, Integer length)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         String clearPassword = Objects.requireNonNull(password, "password must not be null");
-        this.iterations = Objects.requireNonNull(iterations, "iterations must not be null");
-        this.length = Objects.requireNonNull(length, "length must not be null");
+        this.iterations = iterations == null ? 1024 : iterations;
+        this.length = length == null ? 128 : length;
 
         this.salt = new byte[32];
         SecureRandom random = new SecureRandom();
@@ -52,7 +58,10 @@ public final class PasswordInfo {
     }
 
     public String createDatabasePassword() {
-        return String.format("%s:%s:%d",
-                Arrays.toString(this.salt), Arrays.toString(this.password), this.iterations, this.length);
+        return String.format("%s:%s:%d:%d",
+                Base64.getEncoder().encodeToString(this.salt),
+                Base64.getEncoder().encodeToString(this.password),
+                this.iterations,
+                this.length);
     }
 }

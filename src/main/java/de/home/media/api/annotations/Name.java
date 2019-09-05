@@ -1,4 +1,4 @@
-package de.home.media.api.common.annotations;
+package de.home.media.api.annotations;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

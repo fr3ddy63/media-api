@@ -10,6 +10,6 @@ public class DuplicateEntityMapper implements ExceptionMapper<PersistenceExcepti
 
     @Override
     public Response toResponse(PersistenceException e) {
-        return Response.status(Response.Status.CONFLICT).build();
+        return Response.status(Response.Status.CONFLICT).entity("PersistenceException").build();
     }
 }
